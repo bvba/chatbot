@@ -22,6 +22,6 @@ for i in range(3) :
     for j in range(8) :
         txt = items[i * 8 + j].get_text()
         if txt != '\n\xa0\n' :
-            mealList += ('# ' + sMealMenu[j] + '\n' + txt + '-' * 15 + '\n')
+            mealList += ('# ' + sMealMenu[j] + '\n' + txt + '─' * 12 + '\n')
     
     meal[sMealTime[i]] = mealList[:-2]
