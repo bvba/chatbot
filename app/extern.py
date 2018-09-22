@@ -1,5 +1,6 @@
 
 from Menu import menu
+from parsing import meal
 
 mealTime = {'type' : 'buttons', 'buttons' : ['아침', '점심', '저녁']}
 koToEng = {

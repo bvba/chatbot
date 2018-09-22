@@ -15,15 +15,11 @@ def keyboard() :
 @app.route('/message', methods = ['POST'])
 def message() :
     data = request.get_json()
-    print(data)
     content = data['content']
 
     res = dict()
     if content == '아침' or content == '점심' or content == '저녁':
-        res['message'] = {'text' : content + 'is selected\nplease choose menu'}
-        res['keyboard'] = menu.getKeyboard()
-    elif content in koToEng :
-        res['message'] = {'text' : content + 'is selected'}
+        res['message'] = {'text' : meal[content]}
         res['keyboard'] = mealTime
     return jsonify(res)
 
