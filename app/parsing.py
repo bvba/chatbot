@@ -30,7 +30,7 @@ class Parsing :
 			for j in range(5) :
 				txt = items[i * 8 + j].get_text()
 				if txt == '\n\xa0\n' : continue
-				tmpData += ('# ' + src.mealMenu[j] + txt + '─' * 12 + '\n')
+				tmpData += ('- ' + src.mealMenu[j] + txt + '─' * 12 + '\n')
 			self.__data[src.mealTime[i]] = tmpData[:-2]
 
 parsing = Parsing()
