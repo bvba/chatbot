@@ -16,9 +16,10 @@ class Menu :
 		return self.__meal[content]
 
 	def __update(self) :
-		if self.__date == list(time.localtime())[:3] :
-			return
-		self.__date = list(time.localtime())[:3]
+		curr = list(time.localtime())[:3]
+		if self.__date == curr : return
+		print('update')
+		self.__date = curr.copy()
 		self.__meal = parsing.getData()
         
 menu = Menu()

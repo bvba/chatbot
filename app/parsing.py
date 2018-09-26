@@ -1,6 +1,6 @@
 
 from bs4 import BeautifulSoup
-from res import *
+import src
 import urllib.request
 
 
@@ -30,7 +30,7 @@ class Parsing :
 			for j in range(5) :
 				txt = items[i * 8 + j].get_text()
 				if txt == '\n\xa0\n' : continue
-				tmpData += ('# ' + mealMenu[j] + txt + '─' * 12 + '\n')
-			self.__data[mealTime[i]] = tmpData[:-2]
+				tmpData += ('# ' + src.mealMenu[j] + txt + '─' * 12 + '\n')
+			self.__data[src.mealTime[i]] = tmpData[:-2]
 
 parsing = Parsing()

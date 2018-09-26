@@ -2,8 +2,8 @@
 #-*-coding: euc-kr -*-
 
 from flask import Flask, jsonify, request
-from res import *
 from Menu import menu
+import src
 
 app = Flask(__name__)
 
@@ -13,7 +13,7 @@ def temp() :
 
 @app.route('/keyboard')
 def keyboard() :
-	return jsonify(mealTimeKeyB)
+	return jsonify(src.mealTimeKeyB)
 
 @app.route('/message', methods = ['POST'])
 def message() :
@@ -21,9 +21,9 @@ def message() :
 	content = data['content']
 
 	resp = dict()
-	if content in mealTime:
+	if content in src.mealTime:
 		resp['message'] = {'text' : menu.getMeal(content)}
-		resp['keyboard'] = mealTimeKeyB
+		resp['keyboard'] = src.mealTimeKeyB
 	return jsonify(resp)
 
 if __name__ == '__main__' :
