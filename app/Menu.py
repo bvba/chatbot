@@ -1,5 +1,5 @@
 
-from Parsing import parsing
+from Parsing import Parsing
 import time
 
 class Menu :
@@ -20,6 +20,6 @@ class Menu :
 		if self.__date == curr : return
 		print('update')
 		self.__date = curr.copy()
-		self.__meal = parsing.getData()
+		self.__meal = Parsing().getData()
         
 menu = Menu()
