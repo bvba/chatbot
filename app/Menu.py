@@ -13,7 +13,7 @@ class Menu :
 
 	def getMeal(self, content) :
 		self.__update()
-		return self.__meal[content]
+		return '-' + content + '\n' + self.__meal[content]
 
 	def __update(self) :
 		curr = list(time.localtime())[:3]
