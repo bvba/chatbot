@@ -1,32 +1,24 @@
 
-from parsing import meal
+from Parsing import parsing
 import time
 
 class Menu :
-    def __init__(self) :
-        self.__date = list(time.localtime())[:3]
-        self.__keyboard = dict()
-        self.__meal = []
-        self.__update()
+	def __init__(self) :
+		# date를 이용하여 식단 정보가 최신 상태인지 확인
+		self.__date = []
+		# 식단 정보
+		self.__meal = dict()
+		# 식단 정보를 갱신
+		self.__update()
 
-    def getKeyboard(self) :
-        self.__dateChk()
-        return self.__keyboard
+	def getMeal(self, content) :
+		self.__update()
+		return self.__meal[content]
 
-    def getMenu(self, menu) :
-        __dateChk()
-        return self.munuList[menu]
-
-    def __dateChk(self) :
-        if self.__date != list(time.localtime())[:3] :
-            self.__update()
-
-    def __update(self) :
-        print('update')
-        self.__keyboard = {
-            'type' : 'buttons',
-            'buttons' : ['한식', '일품', '전골 or 뚝배기', '양식', '능수관']
-        }
-        self.__meal = meal
+	def __update(self) :
+		if self.__date == list(time.localtime())[:3] :
+			return
+		self.__date = list(time.localtime())[:3]
+		self.__meal = parsing.getData()
         
 menu = Menu()

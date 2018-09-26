@@ -1,28 +1,31 @@
 
+#-*-coding: euc-kr -*-
+
 from flask import Flask, jsonify, request
-from extern import *
+from res import *
+from Menu import menu
 
 app = Flask(__name__)
 
 @app.route('/')
 def temp() :
-    return ''
+	return 'god yungoon Â÷³ÉÇØ'
 
 @app.route('/keyboard')
 def keyboard() :
-    return jsonify(mealTime)
+	return jsonify(mealTimeKeyB)
 
 @app.route('/message', methods = ['POST'])
 def message() :
-    data = request.get_json()
-    content = data['content']
+	data = request.get_json()
+	content = data['content']
 
-    res = dict()
-    if content == 'ì•„ì¹¨' or content == 'ì ì‹¬' or content == 'ì €ë…':
-        res['message'] = {'text' : meal[content]}
-        res['keyboard'] = mealTime
-    return jsonify(res)
+	resp = dict()
+	if content in mealTime:
+		resp['message'] = {'text' : menu.getMeal(content)}
+		resp['keyboard'] = mealTimeKeyB
+	return jsonify(resp)
 
 if __name__ == '__main__' :
-    app.debug = True
-    app.run(host = '0.0.0.0', port = 1526)
+	app.debug = True
+	app.run(host = '0.0.0.0', port = 1526)
