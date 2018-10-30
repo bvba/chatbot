@@ -1,25 +1,49 @@
 
-from Parsing import Parsing
+from bs4 import BeautifulSoup
+from Src import src 
+from TimeManager import tm # tm == TimeManager
 import time
+import urllib.request
+
 
 class Menu :
-	def __init__(self) :
-		# date를 이용하여 식단 정보가 최신 상태인지 확인
-		self.__date = []
-		# 식단 정보
-		self.__meal = dict()
-		# 식단 정보를 갱신
-		self.__update()
+    def __init__(self) :
+        # 식단 정보
+        self.__meal = dict()
 
-	def getMeal(self, content) :
-		self.__update()
-		return '[' + content + ']\n' + self.__meal[content]
+        # parsing url
+        self.__url = 'https://coop.koreatech.ac.kr:45578/dining/menu.php' + \
+                     '?sday=' + str(tm.mainTime.sec)
+        self.__parsing()
 
-	def __update(self) :
-		curr = list(time.localtime())[:3]
-		if self.__date == curr : return
-		print('update')
-		self.__date = curr.copy()
-		self.__meal = Parsing().getData()
-        
+    # 아침 or 점심 or 저녁을 인자로 넘기면 해당하는 메뉴 반환
+    def getMeal(self, content) :
+        return '[' + content + '] - ' +	\
+               str(tm.mainTime.st[1]) + '.' + str(tm.mainTime.st[2]) + '\n' + \
+               self.__meal[content]
+
+    # 메뉴 파싱
+    def __parsing(self) :
+        with urllib.request.urlopen(self.__url) as fs :
+            soup = BeautifulSoup(fs.read()
+                                 .decode('euc-kr')
+                                 .replace('timeo', 'time')
+                                 .replace('listo', 'list')
+                                 .replace('\r', '')
+                                 .replace('\t', '')
+                                 .replace('kcal', 'kcal\n')
+                                 , 'html.parser')
+            items = soup.find_all('td', {'class' : 'menu-list'})
+
+        # 아침 점심 저녁
+        for i in range(3) :
+            tmpData = ''
+            # 한식, 일품, 특식, 양식, 능수관
+            for j in range(5) :
+                txt = items[i * 8 + j].get_text()
+                if txt == '\n\xa0\n' : continue
+                tmpData += ('# ' + src.mealType[j] + txt + '─' * 12 + '\n')
+            self.__meal[src.mealTime[i]] = tmpData[:-2]
+
+
 menu = Menu()
