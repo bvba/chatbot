@@ -3,6 +3,7 @@ from flask import jsonify, request
 from Src import src
 from Menu import menu
 from TimeManager import tm
+from DataManager import dm
 import time
 
 
@@ -10,14 +11,14 @@ class Manager() :
     def __init(self) :
         None
 
-    def process(self, url, req = None) :
+    def process(self, s, req = None) :
         '''
         friend
         chat_room
         '''
-        if url == 'keyboard' :
-            return jsonify(self.keybod(tm.mainTime.st)), 200
-        elif url == 'message' :
+        if s == 'keyboard' :
+            return jsonify(self.keybod()), 200
+        elif s == 'message' :
             print(req)
 
             if tm.update() :
@@ -30,7 +31,7 @@ class Manager() :
 
             # response
             resp = dict()
-            resp['keyboard'] = self.keybod(tm.mainTime.st)
+            resp['keyboard'] = self.keybod()
 
             if content in src.mealTime :
                 resp['message'] = {'text' : menu.getMeal(content)}
@@ -38,16 +39,22 @@ class Manager() :
                 resp['message'] = {'text' : '아직 구현되지 않은 기능입니다....\n' + \
                                    '사용에 불편을 끼쳐드려 죄송합니다 ㅠㅠ'}
             return jsonify(resp), 200
+        elif s == 'addFriend' :
+            dm.addUser(req['user_key'])
+            return '', 200
+        elif s == 'removeFriend' or s == 'exitChatRoom':
+            dm.removeUser(req)
+            return '', 200
         else :
             return jsonify(self.keybod()), 200
 
     # keybod = {'type' : 'buttons', 'buttons' : self.mealTime + ...}
     # type(structTime) == time.struct_time == type(tm.mainTime.st)
     # when call keybod function, must jsonify return value
-    def keybod(self, structTime) :
-        if type(structTime) != time.struct_time :
-            print('Manager.py - keybod function error')
-            return src.keybod
+    def keybod(self, structTime = None) :
+        tm.update()
+        if structTime == None :
+            structTime = tm.mainTime.st
         wday = ['월', '화', '수', '목', '금', '토', '일']
         keybod = src.keybod.copy()
         keybod['buttons'][0] = ('아침 - ' + str(structTime[1]) + '.' + str(structTime[2]) + \

@@ -1,6 +1,6 @@
 
 import time
-
+import json
 
 class TimeManager() :
     def __init__(self) :
@@ -44,5 +44,25 @@ class MyTime() :
             self.st = time.localtime(0)
             self.sec = 0 # time.mktime(st)
 
+    def __repr__(self) :
+        return self.__str__() + ' ' + str(self.sec)
+        
+    def __lt__(self, other) :
+        return self.sec < other.sec
+
+    def __le__(self, other) :
+        return self.sec <= other.sec
+
+    def __eq__(self, other) :
+        return self.sec == other.sec
+
+    def __ne__(self, other) :
+        return self.sec != other.sec
+
+    def __gt__(self, other) :
+        return self.sec > other.sec
+
+    def __ge__(self, other) :
+        return self.sec >= other.sec
 
 tm = TimeManager()

@@ -22,6 +22,19 @@ def message() :
     req = request.get_json()
     return manager.process('message', req)
 
+@app.route('/friend', methods = ['POST'])
+def addFriend() :
+    req = request.get_json()
+    return manager.process('addFriend', req)
+
+@app.route('/friend/<user_key>', methods = ['DELETE'])
+def removeFriend(user_key) :
+    return manager.process('removeFriend', user_key)
+
+@app.route('/chat_room/<user_key>', methods = ['DELETE'])
+def exitChatRoom(user_key) :
+    return manager.process('exitChatRoom', user_key)
+
 if __name__ == '__main__' :
     app.debug = True
     app.run(host = '0.0.0.0', port = 1526)

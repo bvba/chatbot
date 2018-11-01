@@ -26,6 +26,12 @@ class Menu :
                str(tm.mainTime.st[1]) + '.' + str(tm.mainTime.st[2]) + '\n' + \
                self.__meal[content]
 
+    def getAllMeal(self) :
+        ret = ''
+        for content in src.mealTime :
+            ret += getMeal(content)
+        return ret
+
     # 메뉴 파싱
     def __parsing(self) :
         with urllib.request.urlopen(self.__url) as fs :
