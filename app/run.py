@@ -13,7 +13,7 @@ def index() :
 # get keyboard
 @app.route('/keyboard')
 def keyboard() :
-    return manager.process('keyboard'), 200
+    return manager.process('keyboard')
 
 # button selected
 @app.route('/message', methods = ['POST'])

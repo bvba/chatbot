@@ -16,6 +16,10 @@ class Menu :
                      '?sday=' + str(tm.mainTime.sec)
         self.__parsing()
 
+    def update(self) :
+        print('Menu update')
+        self.__init__()
+
     # 아침 or 점심 or 저녁을 인자로 넘기면 해당하는 메뉴 반환
     def getMeal(self, content) :
         return '[' + content + '] - ' +	\

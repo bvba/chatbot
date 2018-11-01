@@ -4,40 +4,42 @@ import time
 
 class TimeManager() :
     def __init__(self) :
-        ltime = list(time.localtime())
-        ltime[3:6] = [0, 0, 0] # hour, min, second = 0, 0, 0
-        ltime = time.struct_time(ltime)
-
-        self.mainTime = MyTime(ltime)
-        del ltime
+        self.mainTime = MyTime(self.__myMktime(time.localtime()))
 
     def update(self) :
-        ltime = list(time.localtime())
-        currTime = str(ltime[3]) + str(ltime[4])
-        if currTime >= '1830' :
-            self.mainTime = MyTime(self.mainTime.sec + 86400)
-            return True
-        elif list(self.mainTime.st)[:3] != ltime[:3] :
-            self.__init__()
+        ltime = time.localtime()
+        # local time + 5 hour 30 min ( == 19800 sec)
+        # because when 18 h 30 m : dinner time is over
+        # (today's dinner time over -> have to update time to next day)
+        ltime = time.localtime(int(time.mktime(ltime)) + 19800)
+
+        if list(self.mainTime.st)[:3] != list(ltime)[:3] :
+            self.mainTime = MyTime(self.__myMktime(ltime))
+            print('tm update')
             return True
         return False
+
+    # calculation day's mktime when time is 00 h 00 m 00 s
+    def __myMktime(self, structTime) :
+        if type(structTime) != time.struct_time :
+            print('TimeManager.py - __myMktime function error')
+            structTime = time.localtime()
+        st = structTime
+        st = list(st)
+        st[3:6] = [0, 0, 0] # hour, min, second == 0, 0, 0
+        st = time.struct_time(st)
+        return int(time.mktime(st))
         
 
 class MyTime() :
-    def __init__(self, st = None, sec = None) :
-        '''
-        st == time.struct_time
-        sec == time.mktime(st)
-        '''
-        if st != None and sec != None :
-            print('MyTime init error')
-            exit()
-        elif type(st) == time.struct_time :
-            self.st = st
-            self.sec = int(time.mktime(st))
-        elif type(sec) == int :
-            self.sec = sec
-            self.st = time.localtime(sec)
+    def __init__(self, val = None) :
+        # val == time.struct_time or time.mktime(st)
+        if type(val) == time.struct_time :
+            self.st = val
+            self.sec = int(time.mktime(val))
+        elif type(val) == int :
+            self.sec = val
+            self.st = time.localtime(val)
         else :
             self.st = time.localtime(0)
             self.sec = 0 # time.mktime(st)
