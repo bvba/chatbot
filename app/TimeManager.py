@@ -1,4 +1,5 @@
 
+from Src import src
 import time
 import json
 
@@ -44,8 +45,14 @@ class MyTime() :
             self.st = time.localtime(0)
             self.sec = 0 # time.mktime(st)
 
+    def toString(self) :
+        return self.__str__() + '(' + src.wday[self.st[6]] + ')'
+
+    def __str__(self) :
+        return str(self.st[1]) + '.' + str(self.st[2])
+
     def __repr__(self) :
-        return self.__str__() + ' ' + str(self.sec)
+        return self.st[0] + self.__str__() + ' ' + str(self.sec)
         
     def __lt__(self, other) :
         return self.sec < other.sec
@@ -64,5 +71,8 @@ class MyTime() :
 
     def __ge__(self, other) :
         return self.sec >= other.sec
+
+    def __hash__(self) :
+        return self.sec
 
 tm = TimeManager()

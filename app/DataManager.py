@@ -17,7 +17,7 @@ class DataManager :
 
     def getUserTime(self, user_key) :
         userPath = self.__userPath(user_key)
-        if not os.path.exists(userPaht) :
+        if not os.path.exists(userPath) :
             self.addUser(user_key)
             return tm.mainTime
         with open(userPath, 'r') as f :
