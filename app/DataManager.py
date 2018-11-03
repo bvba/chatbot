@@ -8,13 +8,12 @@ class DataManager :
         self.__menu = os.getcwd() + '\\static\\menu\\'
 
     def addUser(self, user_key) :
-        userPath = self.__userPath(user_key)
-        with open(userPath, 'w') as f :
-            f.write(str(tm.mainTime.sec))
+        self.setUserTime(user_key, tm.mainTime)
 
     def removeUser(self, user_key) :
         userPath = self.__userPath(user_key)
-        os.remove(userPath)
+        if os.path.exists(userPath) :
+            os.remove(userPath)
 
     def getUserTime(self, user_key) :
         userPath = self.__userPath(user_key)
@@ -25,7 +24,9 @@ class DataManager :
             return MyTime(int(f.read()))
     
     def setUserTime(self, user_key, myTime) :
-        None
+        userPath = self.__userPath(user_key)
+        with open(userPath, 'w') as f :
+            f.write(str(myTime.sec))
 
     def __userPath(self, user_key) :
         return self.__user + user_key + '.txt'
