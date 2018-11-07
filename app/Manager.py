@@ -13,23 +13,17 @@ class Manager() :
         None
 
     def process(self, s, req = None) :
-        '''
-        friend
-        chat_room
-        '''
         if s == 'keyboard' :
             # /keyboard 에서 get으로 keybod를 요청하는 경우 user_key를 알 수 없다.
             # 따라서 현재 날짜(tm.mainTIme)의 keybod(default keybod == include ' ')를 반환한다
             return jsonify(self.keybod()), 200
-        elif s == 'message' :
-            print(req)
-
-            if tm.update() :
-                menu.update()
-            
+        elif s == 'message' :            
             # req['content'] == usually '아침', '점심', '저녁'
             content = req['content']
             user_key = req['user_key']
+
+            if tm.update() :
+                menu.update()
 
             # /keyboard get 요청으로 생성된 keybod에는 현재 날짜의 button이 활성화 되므로
             # userTime이 아닌 현재 날짜(tm.mainTIme)의 메뉴를 보내줘야한다.
@@ -58,11 +52,18 @@ class Manager() :
                 userTime = MyTime(userTime.sec + 86400)
                 dm.setUserTime(user_key, userTime)
                 resp['message'] = {'text' : '날짜 변경 - ' + userTime.toString()}
+            # '소개'
+            elif content == src.keybod['buttons'][5] :
+                resp['message'] = {'text' : src.intro,
+                                   'message_button' : {'label' : '문의하기',
+                                                       'url' : src.openchatLink}
+                                   }
             else :
                 resp['message'] = {'text' : '아직 구현되지 않은 기능입니다....\n' + \
                                             '사용에 불편을 드려 죄송합니다 ㅠㅠ'}
             
             resp['keyboard'] = self.keybod(user_key)
+
             return jsonify(resp), 200
         elif s == 'addFriend' :
             dm.addUser(req['user_key'])
@@ -86,10 +87,17 @@ class Manager() :
             keybod['buttons'].pop(3)
         else :
             myTime = dm.getUserTime(user_key)
-            if myTime == tm.mainTime :
+            if myTime == tm.mainTime : 
+                # 이전 날로 날짜 변경 버튼 pop
                 keybod['buttons'].pop(3)
+            if myTime >= MyTime(tm.mainTime.sec + (menu.getMealSize() - 1) * 86400) :
+                # 다음 날로 날짜 변경 버튼 pop
+                keybod['buttons'].pop(4)
         
-        keybod['buttons'][0] += ' - ' + myTime.toString()
+        if user_key == None :
+            keybod['buttons'][0] += '- 자동'
+        else :
+            keybod['buttons'][0] += ' - ' + myTime.toString()
         if user_key == None :
             whiteSpace = '　' # whiteSpace == '\u3000'
             for i in range(len(keybod['buttons'])) :

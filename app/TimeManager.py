@@ -9,8 +9,8 @@ class TimeManager() :
 
     def update(self) :
         ltime = time.localtime()
-        # local time + 5 hour 30 min ( == 19800 sec)
-        # because when 18 h 30 m : dinner time is over
+        # local time = local time + 5 hour 30 min ( == 19800 sec)
+        # because 18h 30m : dinner time over
         # (today's dinner time over -> have to update time to next day)
         ltime = time.localtime(int(time.mktime(ltime)) + 19800)
 

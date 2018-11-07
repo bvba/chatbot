@@ -1,5 +1,6 @@
 
 import os
+import json
 from TimeManager import tm, MyTime
 
 class DataManager :
@@ -31,10 +32,19 @@ class DataManager :
     def __userPath(self, user_key) :
         return self.__user + user_key + '.txt'
 
-    def getMenu(self, timeStruct, content) :
-        None
+    def __menuPath(self, timeStruct) :
+        return self.__menu + timeStruct.toString() + '.json'
+
+    def getMenu(self, timeStruct) :
+        menuPath = self.__menuPath(timeStruct)
+        if not os.path.exists(menuPath) :
+            return False
+        with open(menuPath, 'r') as f :
+            return json.loads(f.read())
 
     def saveMenu(self, meal) :
-        None
+        menuPath = self.__menuPath(tm.mainTime)
+        with open(menuPath, 'w') as f :
+            f.write(json.dumps(meal))
 
 dm = DataManager()
