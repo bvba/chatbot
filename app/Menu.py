@@ -4,6 +4,7 @@ from Src import src
 from TimeManager import tm, MyTime # tm == TimeManager
 from DataManager import dm
 import time
+import threading
 import urllib.request
 
 
@@ -19,6 +20,12 @@ class Menu :
 
     def update(self) :
         self.__init__()
+
+    def getDayRange(self) :
+        dayRange = 7 - tm.mainTime.st[6]
+        if tm.mainTime.st[6] > 3 :
+            dayRange += 7
+        return dayRange
 
     def getMealSize(self) :
         return len(self.__meal)
@@ -43,13 +50,15 @@ class Menu :
     def __parsingAll(self) :
         # mon, tue, wed, thu : ~sun 그 주 일요일까지 메뉴 확인 가능
         # fri, sat, sun : ~ sun ~ sun 그 다음 주 일요일까지 메뉴 확인 가능
-        dayRange = 7 - tm.mainTime.st[6]
-        if tm.mainTime.st[6] > 3 :
-            dayRange += 7
+        dayRange = self.getDayRange()
         for day in range(dayRange) :
             myTime = MyTime(tm.mainTime.sec + day * 86400)
-            self.__meal[myTime] = self.__parsing(myTime)
-        
+            if day == 0 :
+                self.__addMeal(myTime)
+            else :
+                t = threading.Thread(target = self.__addMeal, args = (myTime, ))
+                t.start()
+
         # 메뉴 변동 가능성이 있으므로 오늘 메뉴만 저장하고
         # 이후 날짜의 메뉴는 저장하지 않는다.
         dm.saveMenu(self.__meal[tm.mainTime])
@@ -79,5 +88,8 @@ class Menu :
                 tmpData += ('# ' + src.mealType[j] + txt + '─' * 12 + '\n')
             meal[src.mealTime[i]] = tmpData[:-2]
         return meal
+
+    def __addMeal(self, myTime) :
+        self.__meal[myTime] = self.__parsing(myTime)
 
 menu = Menu()

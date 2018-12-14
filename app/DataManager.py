@@ -42,8 +42,8 @@ class DataManager :
         with open(menuPath, 'r') as f :
             return json.loads(f.read())
 
-    def saveMenu(self, meal, timeStruct = None) :
-        menuPath = self.__menuPath(tm.mainTime if timeStruct == None else timeStruct)
+    def saveMenu(self, meal, myTime = None) :
+        menuPath = self.__menuPath(tm.mainTime if myTime == None else myTime)
         with open(menuPath, 'w') as f :
             f.write(json.dumps(meal))
 

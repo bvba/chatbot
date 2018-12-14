@@ -91,7 +91,17 @@ class Manager() :
         else :
             myTime = dm.getUserTime(user_key)
             keybod['buttons'][0] += ' - ' + myTime.toString()
-            if myTime >= MyTime(tm.mainTime.sec + (menu.getMealSize() - 1) * 86400) :
+
+            if myTime < MyTime(tm.mainTime.sec + (menu.getDayRange() - 1) * 86400) :
+                # menu의 thread(__parsingAll)에서 meal을 충분히 파싱하지 못한 경우
+                # 다음 날로 날짜 변경 버튼을 누를 수 있게하면
+                # user가 파싱하지 못한 날짜의 meal을 요청할 수 있게 된다.
+                # 이는 dict에 없는 key값에 해당하는 value를 요청하는 것 이므로
+                # thread에서 충분한 파싱을 할 수 있도록 기다려준다.
+                cur = ((myTime.sec - tm.mainTime.sec) // 86400) + 1
+                while menu.getMealSize() < cur :
+                    time.sleep(0.1)
+            else :
                 # 다음 날로 날짜 변경 버튼 pop
                 keybod['buttons'].pop(4)
         
