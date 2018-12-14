@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from Src import src 
 from TimeManager import tm, MyTime # tm == TimeManager
 from DataManager import dm
+from multiprocessing import Pool
 import time
 import urllib.request
 
@@ -18,7 +19,6 @@ class Menu :
         self.__parsing()
 
     def update(self) :
-        print('Menu update')
         self.__init__()
 
     def getMealSize(self) :
@@ -27,7 +27,7 @@ class Menu :
     # 아침 or 점심 or 저녁을 인자로 넘기면 해당하는 메뉴 반환
     def getMeal(self, content, myTime = tm.mainTime) :
         return '[' + content + '] - ' +	myTime.toString() + '\n' + \
-                self.__meal[myTime][content]
+                (self.__meal[myTime][content] if myTime >= tm.mainTime else dm.getMenu(myTime)[content])
 
     def __setUrl(self, myTime = tm.mainTime) :
         self.__url = 'https://coop.koreatech.ac.kr:45578/dining/menu.php' + \
@@ -35,7 +35,17 @@ class Menu :
 
     # 메뉴 파싱
     def __parsing(self) :
-        for day in range(5) :
+        print('Menu.py - ' + __name__)
+        startTime = time.time()
+
+        # mon, tue, wed, thu : ~sun 그 주 일요일까지 메뉴 확인 가능
+        # fri, sat, sun : ~ sun ~ sun 그 다음 주 일요일까지 메뉴 확인 가능
+        dayRange = 7 - tm.mainTime.st[6]
+        if tm.mainTime.st[6] > 3 :
+            dayRange += 7
+
+        
+        for day in range(dayRange) :
             myTime = MyTime(tm.mainTime.sec + day * 86400)
             self.__setUrl(myTime)
 
@@ -64,5 +74,10 @@ class Menu :
         # 메뉴 변동 가능성이 있으므로 오늘 메뉴만 저장하고
         # 이후 날짜의 메뉴는 저장하지 않는다.
         dm.saveMenu(self.__meal[tm.mainTime])
+
+        endTime = time.time()
+        print('Menu.py - parsing time : ' + str(endTime - startTime))
+
+    
 
 menu = Menu()

@@ -10,6 +10,8 @@ import copy
 
 class Manager() :
     def __init(self) :
+        # TODO
+        # 18:31분에 자동으로 menu update
         None
 
     def process(self, s, req = None) :
@@ -77,27 +79,25 @@ class Manager() :
     # keybod = {'type' : 'buttons', 'buttons' : self.mealTime + ...}
     # type(structTime) == time.struct_time == type(tm.mainTime.st)
     # when call keybod function, must jsonify return value
-    # default == True : /keyboard get -> tm.mainTime keybod
+    # user_key == None : /keyboard get -> tm.mainTime keybod
     def keybod(self, user_key = None) :
-        tm.update()        
         keybod = copy.deepcopy(src.keybod)
 
+        # /keyboard get 요청
         if user_key == None :
             myTime = tm.mainTime
-            keybod['buttons'].pop(3)
+            keybod['buttons'][0] += ' - 자동'
+        # /message post 요청(날짜 변경)
         else :
             myTime = dm.getUserTime(user_key)
-            if myTime == tm.mainTime : 
-                # 이전 날로 날짜 변경 버튼 pop
-                keybod['buttons'].pop(3)
+            keybod['buttons'][0] += ' - ' + myTime.toString()
             if myTime >= MyTime(tm.mainTime.sec + (menu.getMealSize() - 1) * 86400) :
                 # 다음 날로 날짜 변경 버튼 pop
                 keybod['buttons'].pop(4)
         
-        if user_key == None :
-            keybod['buttons'][0] += '- 자동'
-        else :
-            keybod['buttons'][0] += ' - ' + myTime.toString()
+        # /keyboard get 요청시 모든 버튼 뒤에 공백(특수문자)를 넣어줌
+        # process 부분에서는 어떤 keybod(keyboard get, message post)에서
+        # 버튼을 눌렀는지 모르기 때문
         if user_key == None :
             whiteSpace = '　' # whiteSpace == '\u3000'
             for i in range(len(keybod['buttons'])) :

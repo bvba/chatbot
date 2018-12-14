@@ -16,7 +16,6 @@ class TimeManager() :
 
         if list(self.mainTime.st)[:3] != list(ltime)[:3] :
             self.mainTime = MyTime(self.__myMktime(ltime))
-            print('tm update')
             return True
         return False
 
@@ -52,7 +51,7 @@ class MyTime() :
         return str(self.st[1]) + '.' + str(self.st[2])
 
     def __repr__(self) :
-        return self.st[0] + self.__str__() + ' ' + str(self.sec)
+        return str(self.st[0]) + '.' + self.__str__() + ' ' + str(self.sec)
         
     def __lt__(self, other) :
         return self.sec < other.sec

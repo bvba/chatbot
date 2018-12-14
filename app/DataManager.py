@@ -33,7 +33,7 @@ class DataManager :
         return self.__user + user_key + '.txt'
 
     def __menuPath(self, timeStruct) :
-        return self.__menu + timeStruct.toString() + '.json'
+        return self.__menu + str(timeStruct.st[0]) + '.' + timeStruct.toString() + '.json'
 
     def getMenu(self, timeStruct) :
         menuPath = self.__menuPath(timeStruct)
