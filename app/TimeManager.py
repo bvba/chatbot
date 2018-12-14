@@ -60,10 +60,10 @@ class MyTime() :
         return self.sec <= other.sec
 
     def __eq__(self, other) :
-        return self.sec == other.sec
+        return type(self) == type(other) and self.sec == other.sec
 
     def __ne__(self, other) :
-        return self.sec != other.sec
+        return type(self) != type(other) or self.sec != other.sec
 
     def __gt__(self, other) :
         return self.sec > other.sec

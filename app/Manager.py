@@ -9,7 +9,7 @@ import copy
 
 
 class Manager() :
-    def __init(self) :
+    def __init__(self) :
         # TODO
         # 18:31분에 자동으로 menu update
         None
