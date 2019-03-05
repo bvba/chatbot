@@ -1,3 +1,7 @@
+
+# -*-coding: utf-8 -*-
+
+
 class Src() :
     def __init__(self) :
         self.intro = '[소개]\n' + \

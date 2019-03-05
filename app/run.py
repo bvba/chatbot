@@ -1,14 +1,15 @@
 
-#-*-coding: euc-kr -*-
+# -*-coding: euc-kr -*-
 
 from flask import Flask, request
 from Manager import manager
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index() :
-    return '', 200
+    return 'hello', 200
 
 # get keyboard
 @app.route('/keyboard')
